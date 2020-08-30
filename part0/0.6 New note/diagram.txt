@@ -1,0 +1,11 @@
+note over Browser:
+User types in some text, and clicks 'Save'
+end note
+
+note over Browser:
+Push note to 'notes' array. Then redraw elements.
+end note
+
+
+Browser->Server:  HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa body:{content: "ttest", date: "2020-08-30T11:44:45.401Z"}
+Server-->Browser: status:201
