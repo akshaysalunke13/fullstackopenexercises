@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import personService from './services/persons'
+import React from 'react'
 
 const PersonForm = ({ addPerson, newName, handleNewName, newNumber, handleNewNumber }) => {
     return (

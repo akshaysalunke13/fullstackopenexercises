@@ -5,18 +5,17 @@ import Notification from './Notification'
 
 const App = () => {
     const [persons, setPersons] = useState([])
+    const [newName, setNewName] = useState('')
+    const [newNumber, setNewNumber] = useState('')
+    const [search, setSearch] = useState('')
+    const [notification, setNotification] = useState(null)
+    const [notificationType, setNotificationType] = useState('error')
 
     useEffect(() => {
         personService
             .getAll()
             .then(response => setPersons(response.data))
     }, [])
-
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-    const [search, setSearch] = useState('')
-    const [notification, setNotification] = useState(null)
-    const [notificationType, setNotificationType] = useState('error')
 
     const addPerson = (event) => {
         event.preventDefault()
