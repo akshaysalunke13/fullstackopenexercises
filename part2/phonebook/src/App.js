@@ -19,7 +19,7 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        for (var i=0; i<persons.length; i++) {
+        for (var i = 0; i < persons.length; i++) {
             if (persons[i].name === newName) {
                 updatePerson(persons[i])
                 return
@@ -35,6 +35,7 @@ const App = () => {
                 setNewName('')
                 setNewNumber('')
             })
+            .catch(error => updateNotification(error.response.data.error, 'error'))
     }
 
     const delPerson = (id) => {
@@ -46,22 +47,23 @@ const App = () => {
                     setPersons(persons.filter(p => p.id !== id))
                     updateNotification(`Person ${id} was deleted successfully.`, 'success')
                 })
+                .catch(error => updateNotification(error.response.data.error, 'error'))
         }
     }
 
     const updatePerson = (currPerson) => {
         if (window.confirm(`Name ${newName} already exists in directory. Do you want to update their number instead?`)) {
-            const newPerson = {...currPerson, number:newNumber}
+            const newPerson = { ...currPerson, number: newNumber }
             console.log('Person updated', newPerson)
             personService
                 .updatePerson(newPerson.id, newPerson)
                 .then(response => {
-                    setPersons(persons.map(p => p.id !== newPerson.id?p:newPerson))
+                    setPersons(persons.map(p => p.id !== newPerson.id ? p : newPerson))
                     updateNotification(`Information for ${currPerson.name} was updated.`, 'success')
                 })
                 .catch(error => {
                     updateNotification(`Person ${currPerson.name} was already removed from the server.`, 'error')
-                    setPersons(persons.filter(p => p.id!==currPerson.id))
+                    setPersons(persons.filter(p => p.id !== currPerson.id))
                 })
         }
     }
@@ -70,7 +72,7 @@ const App = () => {
         console.log('message:', message, 'type:', type)
         setNotification(message)
         setNotificationType(type)
-        setTimeout(()=>setNotification(null), 5000)
+        setTimeout(() => setNotification(null), 5000)
     }
 
     const handleNewName = (event) => setNewName(event.target.value)
@@ -82,7 +84,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={notification} type={notificationType}/>
+            <Notification message={notification} type={notificationType} />
             <Filter search={search} handleSearch={handleSearch} />
             <PersonForm addPerson={addPerson} newName={newName} handleNewName={handleNewName} newNumber={newNumber} handleNewNumber={handleNewNumber} />
             <Numbers persons={persons} search={search} delPerson={delPerson} />
