@@ -27,7 +27,7 @@ test('4.9 each blog has unique identifier is named id and does not contain _id &
 test('4.10 a valid blog can be added to the system', async () => {
     let response = await api.get('/api/blogs')
     const originalBlogs = response.body
-    const newBlog = { title: 'Test blogpost', author: "Akki", likes: 1 }
+    const newBlog = { title: 'Test blogpost', author: "Akki", likes: 1, url: 'test-url'}
 
     await api
         .post('/api/blogs')
@@ -47,7 +47,7 @@ test('4.10 a valid blog can be added to the system', async () => {
 })
 
 test('4.11 if likes property is missing, defaults to 0', async () => {
-    const newBlog = { title: "likes is missing for this blog", author: "Akki" }
+    const newBlog = { title: "likes is missing for this blog", author: "Akki", url: "testurl" }
     let response = await api
         .post('/api/blogs')
         .send(newBlog)
@@ -56,14 +56,20 @@ test('4.11 if likes property is missing, defaults to 0', async () => {
     expect(response.body).toHaveProperty('likes')
 })
 
-test('4.12 if title and url is missing, 400 bad request', async () => {
-    const newBlog = { author: "akki", likes: 13 }
+test('4.12 if title or url is missing, 400 bad request', async () => {
+    let newBlog = { author: "akki", likes: 13, title: "test post without url" }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+    newBlog = {author: 'test-akki', url: 'test-url'}
     await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
 })
 
-afterAll(() => {
-    mongoose.connection.close()
+afterAll( async () => {
+    await mongoose.connection.close()
 })
