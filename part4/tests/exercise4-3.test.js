@@ -7,7 +7,7 @@ test('dummy returns one', () => {
     expect(result).toBe(1)
 })
 
-const blogs = listHelper.originalBlogList
+const blogs = listHelper.initialBlogs
 
 describe('4.4 total likes', () => {
     const listWithOneBlog = [

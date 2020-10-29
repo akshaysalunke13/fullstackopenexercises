@@ -54,7 +54,7 @@ const mostLikes = (blogList) => {
     return {author:authorName, likes:totalLikes[authorName]}
 }
 
-const originalBlogList = [
+const initialBlogs = [
     {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
@@ -106,5 +106,5 @@ const originalBlogList = [
 ]
 
 module.exports = {
-    dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes, originalBlogList
+    dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes, initialBlogs
 }
