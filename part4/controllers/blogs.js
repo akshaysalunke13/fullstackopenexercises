@@ -2,8 +2,7 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/users')
 const jwt = require('jsonwebtoken')
-const logger = require('../utils/logger')
-const blog = require('../models/blog')
+const config = require('../utils/config')
 
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -17,7 +16,7 @@ blogRouter.post('/', async (request, response) => {
         return response.status(400).send('Bad Request')
     }
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const decodedToken = jwt.verify(request.token, config.SECRET)
     if (!request.token || !decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
@@ -27,7 +26,7 @@ blogRouter.post('/', async (request, response) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: request.body.likes || 0,
+        likes: body.likes || 0,
         user: user._id
     })
     const savedBlog = await blog.save()
@@ -38,7 +37,7 @@ blogRouter.post('/', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const decodedToken = jwt.verify(request.token, config.SECRET)
     if (!request.token || !decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
@@ -47,6 +46,7 @@ blogRouter.delete('/:id', async (request, response) => {
     const blogToDelete = await Blog.findById(request.params.id)
 
     if (blogToDelete.user.toString() === user.id.toString()){
+        await Blog.findByIdAndDelete(blogToDelete.id)
         response.status(204).end()
     } else {
         response.status(404).end()
